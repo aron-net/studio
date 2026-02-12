@@ -20,7 +20,8 @@ export default function OrdersPage() {
 
   const { data: orders, isLoading: areOrdersLoading } = useCollection<Order>(ordersQuery);
 
-  if (isUserLoading || areOrdersLoading) {
+  // Show loader while the user session is being established or orders are being fetched.
+  if (isUserLoading || !user || (areOrdersLoading && orders === null)) {
     return (
         <div className="flex items-center justify-center h-full">
             <div className="flex items-center space-x-2 text-muted-foreground">
@@ -31,24 +32,17 @@ export default function OrdersPage() {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="text-center py-16">
-          <CardHeader>
-            <CardTitle>Please refresh the page</CardTitle>
-            <CardDescription>We're getting things ready for you.</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
   const sortedOrders = orders ? [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()) : [];
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold font-headline mb-8">Your Orders</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold font-headline">Your Orders</h1>
+        <p className="text-muted-foreground mt-1">
+          Showing all orders placed from this device. Each order is linked to your current session.
+        </p>
+      </div>
+
       {sortedOrders.length === 0 ? (
         <Card className="text-center py-16">
           <CardHeader>
