@@ -1,17 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag, ShieldCheck } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useEffect } from 'react';
 import { useAuth, useUser, initiateAnonymousSignIn } from '@/firebase';
-
-const navLinks = [
-    { href: '/', label: 'Shop' },
-    { href: '/orders', label: 'My Orders' },
-];
 
 export function AppHeader() {
   const pathname = usePathname();
@@ -32,18 +27,34 @@ export function AppHeader() {
           <span className="font-bold font-headline text-xl text-foreground">CP-Pharma</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm lg:gap-6">
-            {navLinks.map(link => (
-                <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                        "transition-colors hover:text-foreground/80",
-                        pathname === link.href ? "text-foreground font-semibold" : "text-foreground/60"
-                    )}
-                >
-                    {link.label}
-                </Link>
-            ))}
+            <Link
+                href="/"
+                className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === "/" ? "text-foreground font-semibold" : "text-foreground/60"
+                )}
+            >
+                Shop
+            </Link>
+            <Link
+                href="/orders"
+                className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === "/orders" ? "text-foreground font-semibold" : "text-foreground/60"
+                )}
+            >
+                My Orders
+            </Link>
+            <Link
+                href="/admin/orders"
+                className={cn(
+                    "transition-colors hover:text-foreground/80 flex items-center gap-1.5",
+                    pathname.startsWith("/admin") ? "text-foreground font-semibold" : "text-foreground/60"
+                )}
+            >
+                <ShieldCheck className="h-4 w-4" />
+                Admin
+            </Link>
         </nav>
         <div className="flex flex-1 items-center justify-end">
             <Button variant="ghost" size="icon" asChild>
