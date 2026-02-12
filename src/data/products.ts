@@ -86,11 +86,9 @@ const productNames = [
   "Midnight Desire Glow Set",
   "Genz Baddie Glam Package",
   "After Dark Radiance Sey",
-
-  "Love Potion Package",
-  "Romantic Essentials",
-  "Love Potion Package",
-
+  "Whispers of the Heart Collection",
+  "Forever Yours Package Set",
+  "Crimson Bloom Love Set",
   "Good Girl 3-Piece Set for Women",
   "Enchanted Elixir Package",
   "Tropical Romance Bundle",
@@ -211,24 +209,10 @@ const contentsList = [
     "Beyond Beauty Fragrance Spray",
   ],
 
-  [
-    "Duru Body Wash (Watermelon & Aloe Vera)",
-    "Vaseline Advanced Repair Lotion",
-    "Vaseline Blue Seal Petroleum Jelly",
-    "Duru Natural Olive Bar Soap",
-    "Dreamz Perfumed Body Spray",
-  ],
-  [
-    "Dove Glowing Body Wash (Lotus Flower & Rice Water)",
-    "Dove Go Fresh Roll-on Deodorant",
-    "Dove Pink Beauty Bar Soap",
-  ],
-  [
-    "Dove Cucumber & Green Tea Body Wash",
-    "Dove Exfoliating Body Wash",
-    "Smart Collection Fragrance",
-    "Lip Shine",
-  ],
+  // ["Velvet Matte Lipstick", "Satin Finish Lipstick", "Lip Liner"],
+  // ["Glow Serum", "Rosewater Toner", "Shimmering Body Oil"],
+  // ["Velvet Matte Lipstick", "Satin Finish Lipstick", "Lip Liner"],
+  // ["Glow Serum", "Rosewater Toner", "Shimmering Body Oil"],
 
   [
     "Dove Relaxing Body Wash ",
@@ -250,7 +234,24 @@ const contentsList = [
     "Dr. Rashel Black Mask",
     "Dove Body Love Light Care Lotion",
   ],
-
+  [
+    "Duru Body Wash (Watermelon & Aloe Vera)",
+    "Vaseline Advanced Repair Lotion",
+    "Vaseline Blue Seal Petroleum Jelly",
+    "Duru Natural Olive Bar Soap",
+    "Dreamz Perfumed Body Spray",
+  ],
+  [
+    "Dove Glowing Body Wash (Lotus Flower & Rice Water)",
+    "Dove Go Fresh Roll-on Deodorant",
+    "Dove Pink Beauty Bar Soap",
+  ],
+  [
+    "Dove Cucumber & Green Tea Body Wash",
+    "Dove Exfoliating Body Wash",
+    "Smart Collection Fragrance",
+    "Lip Shine",
+  ],
   [
     "Good Girl Perfume",
     "Good Girl Fragrance Mist",
