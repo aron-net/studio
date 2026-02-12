@@ -47,7 +47,7 @@ export function StepPlaceOrder() {
         description: 'Your order has been successfully submitted.',
       });
       resetCheckout();
-      router.push(`/success?orderId=${orderId}`);
+      router.push('/');
     }, 800);
   };
   

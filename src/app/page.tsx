@@ -22,10 +22,10 @@ export default function Home() {
         )}
         <div className="relative p-8 md:p-16 text-center text-white">
           <h1 className="text-4xl md:text-6xl font-headline font-bold mb-4 drop-shadow-md">
-            CP-Pharma Valentine's Specials
+            CP-Pharma is here to celebrate Valentine's with you
           </h1>
           <p className="text-lg md:text-2xl max-w-3xl mx-auto drop-shadow-sm">
-            Discover our exclusive collection of Valentine's gift packages, crafted with love.
+            Discover our exclusive collection of gift packages, crafted with love.
           </p>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { AppFooter } from '@/components/layout/AppFooter';
 
 export const metadata: Metadata = {
-  title: "CP-Pharma Valentine's Shop",
+  title: "CP-Pharma: Celebrate Valentine's With Us",
   description: 'Exclusive Valentine-themed cosmetic gift packages.',
 };
 
