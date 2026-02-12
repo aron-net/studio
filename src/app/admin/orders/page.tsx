@@ -37,9 +37,7 @@ export default function AdminOrdersPage() {
                 Manage and process all customer orders.
             </p>
       </div>
-      <AdminOrderList />
+      <AdminOrderList user={user} />
     </div>
   );
 }
-
-    

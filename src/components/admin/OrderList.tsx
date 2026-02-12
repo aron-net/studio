@@ -8,10 +8,11 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import type { User } from 'firebase/auth';
 
 const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
-export function AdminOrderList() {
+export function AdminOrderList({ user }: { user: User | null }) {
     const { firestore } = useFirebase();
     const { toast } = useToast();
 
@@ -49,7 +50,7 @@ export function AdminOrderList() {
                     <CardDescription className="text-destructive/80">
                         You do not have permission to view this page.
                         <br />
-                        <small>To become an admin, your user ID must be added to the 'admins' collection in Firestore.</small>
+                        <small>To become an admin, add your user ID to the 'admins' collection in Firestore. Your user ID is: <code className="bg-destructive/20 p-1 rounded font-mono">{user?.uid}</code></small>
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -100,4 +101,3 @@ export function AdminOrderList() {
         </Card>
     );
 }
-    
