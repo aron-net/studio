@@ -1,0 +1,270 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a single cosmetic gift package available for purchase in the CP-Pharma Valentine Specials store.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the cosmetic package."
+        },
+        "price": {
+          "type": "number",
+          "description": "The current selling price of the package."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency unit for the product's price, e.g., 'UGX'."
+        },
+        "shortDescription": {
+          "type": "string",
+          "description": "A brief description of the package, suitable for product listings."
+        },
+        "fullDescription": {
+          "type": "string",
+          "description": "A comprehensive description of the package, including details for the product details page."
+        },
+        "contents": {
+          "type": "array",
+          "description": "A list of strings detailing the individual items included in the package.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imageUrls": {
+          "type": "array",
+          "description": "An array of URLs pointing to images of the product. The first URL is typically the main image.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stock": {
+          "type": "number",
+          "description": "The current available quantity of this product in stock."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "currency",
+        "shortDescription",
+        "fullDescription",
+        "contents",
+        "imageUrls",
+        "stock"
+      ]
+    },
+    "PickupPoint": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PickupPoint",
+      "type": "object",
+      "description": "Represents a physical location where customers can pick up their orders.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PickupPoint entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the pickup point."
+        },
+        "address": {
+          "type": "string",
+          "description": "The full physical address of the pickup point."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "address"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer's confirmed purchase, containing details about the entire transaction.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Order entity (order number)."
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "The date and time when the order was placed.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total monetary value of the entire order, including all items and any associated fees."
+        },
+        "fulfillmentMethod": {
+          "type": "string",
+          "description": "The chosen method for order fulfillment, either 'Delivery' or 'Pick-up'."
+        },
+        "deliveryAddress": {
+          "type": "string",
+          "description": "The full delivery address for the order. Required if fulfillmentMethod is 'Delivery'."
+        },
+        "landmark": {
+          "type": "string",
+          "description": "An optional landmark to assist with delivery, if provided."
+        },
+        "pickupPointId": {
+          "type": "string",
+          "description": "Reference to the selected PickupPoint for order collection. (Relationship: PickupPoint 1:N Order). Required if fulfillmentMethod is 'Pick-up'."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact phone number provided by the customer for order communication. Must validate 9-15 digits after removing spaces and can start with '+'."
+        }
+      },
+      "required": [
+        "id",
+        "orderDate",
+        "totalAmount",
+        "fulfillmentMethod",
+        "phoneNumber"
+      ]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents a single product item within a specific order, detailing the quantity and price at the time of purchase.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OrderItem entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to the Order this item belongs to. (Relationship: Order 1:N OrderItem)"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to the Product that was purchased. (Relationship: Product 1:N OrderItem)"
+        },
+        "productName": {
+          "type": "string",
+          "description": "The name of the product at the time of purchase, for historical record keeping."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of the product purchased in this order item."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price of a single unit of the product at the time the order was placed."
+        },
+        "subtotalAmount": {
+          "type": "number",
+          "description": "The calculated total price for this specific order item (quantity * unitPrice)."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "productId",
+        "productName",
+        "quantity",
+        "unitPrice",
+        "subtotalAmount"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Top-level collection for all cosmetic gift packages. These products are publicly readable by all users.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for a specific product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pickupPoints/{pickupPointId}",
+        "definition": {
+          "entityName": "PickupPoint",
+          "schema": {
+            "$ref": "#/backend/entities/PickupPoint"
+          },
+          "description": "Top-level collection for all available physical pickup locations. These are publicly readable by all users to select for order fulfillment.",
+          "params": [
+            {
+              "name": "pickupPointId",
+              "description": "Unique identifier for a specific pickup point."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Subcollection under a specific user, containing all orders placed by that user. Access is restricted to the owner (userId in path).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who placed the order."
+            },
+            {
+              "name": "orderId",
+              "description": "Unique identifier for a specific order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}/orderItems/{orderItemId}",
+        "definition": {
+          "entityName": "OrderItem",
+          "schema": {
+            "$ref": "#/backend/entities/OrderItem"
+          },
+          "description": "Subcollection under a specific order, containing the individual items included in that order. Access is restricted to the owner (userId in parent path).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns the parent order."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier of the parent order."
+            },
+            {
+              "name": "orderItemId",
+              "description": "Unique identifier for a specific order item within an order."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed following the core principles of Authorization Independence, Structural Segregation, and clear Access Modeling to ensure security, scalability, and debuggability. \n\n**Authorization Independence:**\n1.  **Public Collections (`/products`, `/pickupPoints`):** These collections hold globally accessible data. Access rules are simple (`allow read: true;`), requiring no authorization context beyond public access, thus naturally achieving authorization independence.\n2.  **User-Owned Data (`/users/{userId}/orders`, `/users/{userId}/orders/{orderId}/orderItems`):** For private user data, authorization independence is achieved by embedding the `userId` directly into the path. This ensures that the `request.auth.uid` is directly available as a path segment (`userId`) within security rules for `orders` and `orderItems`. This eliminates the need for expensive and complex `get()` calls to a parent document or to denormalize an `ownerId` field into every `order` or `orderItem` document. The ownership is explicitly defined by the path itself, simplifying rules to `allow read, write: if request.auth.uid == userId;`.\n\n**Structural Segregation (Homogeneous Security Posture):**\n1.  **`/products`:** All documents in this collection represent public product information. They share the same security posture: globally readable.\n2.  **`/pickupPoints`:** All documents here are public pickup location details, sharing the same globally readable security posture.\n3.  **`/users/{userId}/orders`:** All documents within a specific user's `orders` subcollection are owned by that user. Their security posture is private to the `userId` in the path.\n4.  **`/users/{userId}/orders/{orderId}/orderItems`:** Similarly, all order items within a specific order are privately accessible only by the owning `userId`.\n\nThis segregation ensures that security rules are straightforward and apply uniformly to all documents within a given collection or subcollection.\n\n**QAPs (Rules are not Filters):**\n1.  **Public Collections (`/products`, `/pickupPoints`):** `list` operations on these collections are inherently secure and efficient as all documents are publicly accessible. No filtering is required at the rule level.\n2.  **User-Owned Data (`/users/{userId}/orders`):** When querying for a user's orders (e.g., `db.collection('users').doc(uid).collection('orders').get()`), the `list` operation is secure because the `userId` is part of the path. Firestore's security rules can directly enforce that `userId == request.auth.uid`. This implicitly filters the results to only the current user's orders, fulfilling the QAP principle by ensuring that the rule matches the query's scope and prevents unauthorized data from being returned or even processed.\n3.  **User-Owned Nested Data (`/users/{userId}/orders/{orderId}/orderItems`):** `list` operations for order items within a specific order are similarly secured by the `userId` in the parent path, ensuring only the authenticated user can list their own order items for their own orders."
+  }
+}
