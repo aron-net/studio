@@ -12,9 +12,12 @@ export type Product = {
 
 export type FulfillmentMethod = 'delivery' | 'pickup';
 
+export type OrderStatus = 'Placed' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+
 // Corresponds to Order entity in backend.json
 export type Order = {
   id: string;
+  userId: string;
   orderDate: string;
   totalAmount: number;
   fulfillmentMethod: FulfillmentMethod;
@@ -22,6 +25,7 @@ export type Order = {
   landmark?: string;
   pickupPointId?: string;
   phoneNumber: string;
+  status: OrderStatus;
 };
 
 // Corresponds to OrderItem entity in backend.json
@@ -34,3 +38,5 @@ export type OrderItem = {
     unitPrice: number;
     subtotalAmount: number;
 }
+
+    

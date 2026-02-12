@@ -4,34 +4,20 @@
  * Core Philosophy:
  * The security model is a hybrid approach. It provides public, read-only access to catalog
  * information like products and pickup locations, while enforcing a strict user-ownership
- * model for all personal and transactional data, such as orders.
+ * model for all personal and transactional data, such as orders. An admin role is included
+ * to allow privileged access for order management.
  *
  * Data Structure:
- * - /products/{productId}: A top-level collection of all products, readable by everyone.
- * - /pickupPoints/{pickupPointId}: A top-level collection of pickup locations, readable by everyone.
- * - /users/{userId}/orders/{orderId}: A user-specific subcollection containing their personal
- *   orders. All documents and subcollections under a user's path are private to them.
+ * - /products/{productId}: Publicly readable product catalog.
+ * - /pickupPoints/{pickupPointId}: Publicly readable pickup locations.
+ * - /users/{userId}/orders/{orderId}: User-specific orders, private to the user but accessible by admins.
+ * - /admins/{userId}: A list of UIDs for users with admin privileges.
  *
  * Key Security Decisions:
- * - Public Data: The `/products` and `/pickupPoints` collections are globally readable to allow
- *   any client (signed-in or anonymous) to browse the store's offerings. Writes to these
- *   collections are disabled from the client-side to be managed by a trusted backend service.
- * - User-Owned Data: All data nested under `/users/{userId}` is strictly controlled. A user can
- *   only access data if their authenticated UID matches the `{userId}` in the document path.
- * - No User Listing: The rules do not allow listing documents in the top-level `/users`
- *   collection, preventing enumeration of all application users.
- *
- * Denormalization for Authorization:
- * This ruleset leverages the Firestore path structure as the primary mechanism for authorization,
- * a technique that avoids costly `get()` calls. By placing user-specific data under
- * `/users/{userId}`, ownership is implicitly and efficiently verifiable by comparing the path
- * segment to the user's authenticated UID.
- *
- * Structural Segregation:
- * The data is segregated into public and private collections. Public data (`/products`,
- * `/pickupPoints`) is kept at the top level for simple, open read access. Private user data
- * is isolated within the `/users/{userId}` path, ensuring that all documents within that
- * tree share the same private, owner-only security posture.
+ * - Public Data: `/products` and `/pickupPoints` are globally readable. Writes are blocked from the client.
+ * - User-Owned Data: Data under `/users/{userId}` is private to that user, enforced by matching `request.auth.uid` with the `{userId}` in the path.
+ * - Admin Access: Users whose UID is a document ID in the `/admins` collection have read/write access to all orders for management purposes.
+ * - Admin Collection Security: The `/admins` collection is not writeable from the client to prevent privilege escalation. Admins must be added via the Firebase Console.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -41,107 +27,94 @@ service cloud.firestore {
     // Helper Functions
     // ------------------------------------------------------------------------
 
-    /**
-     * Returns true if the user is authenticated.
-     */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /**
-     * Returns true if the authenticated user's UID matches the provided userId.
-     * This is the primary function for enforcing user ownership.
-     * @param userId The UID of the document owner from the path.
-     */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
-
-    /**
-     * Returns true if the user is the owner and the document already exists.
-     * Used for safe update and delete operations to prevent modifying non-existent data.
-     * @param userId The UID of the document owner from the path.
-     */
+    
     function isExistingOwner(userId) {
       return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Returns true if the requesting user is an admin.
+     * Admin status is determined by the existence of their UID in the /admins collection.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
     // ------------------------------------------------------------------------
     // Public Collections
     // ------------------------------------------------------------------------
 
-    /**
-     * @description Controls access to the public product catalog.
-     * @path /products/{productId}
-     * @allow (get, list) Any user, authenticated or not, can view products.
-     * @deny (create, update, delete) All client-side writes are blocked. Products must be managed by a trusted backend.
-     * @principle Provides public read access for catalog data while preventing modification by clients.
-     */
     match /products/{productId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow get, list: if true;
+      allow create, update, delete: if false;
     }
+
+    match /pickupPoints/{pickupPointId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+    
+    // ------------------------------------------------------------------------
+    // Admin & User-Specific Data
+    // ------------------------------------------------------------------------
 
     /**
-     * @description Controls access to the list of available pickup points.
-     * @path /pickupPoints/{pickupPointId}
-     * @allow (get, list) Any user, authenticated or not, can view pickup locations.
-     * @deny (create, update, delete) All client-side writes are blocked. Locations must be managed by a trusted backend.
-     * @principle Provides public read access for store information while preventing modification by clients.
+     * @description Manages the list of administrators.
+     * @path /admins/{userId}
+     * @allow (get) Any signed-in user can check for admin existence (required for the `exists()` call in rules).
+     * @deny (list, write) Listing all admins or modifying the admin list from the client is prohibited for security. Admins must be managed via the Firebase Console.
      */
-    match /pickupPoints/{pickupPointId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+    match /admins/{userId} {
+        allow get: if isSignedIn();
+        allow list, create, update, delete: if false;
     }
-
-    // ------------------------------------------------------------------------
-    // User-Specific Data
-    // ------------------------------------------------------------------------
 
     match /users/{userId} {
-      // It is intentionally disallowed for any client to read, write, or list
-      // user profile documents directly from the top-level collection.
-      allow get: if false;
-      allow list: if false;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow get, list, create, update, delete: if false;
 
       /**
        * @description Controls access to a user's personal order history.
        * @path /users/{userId}/orders/{orderId}
-       * @allow (get, create) A signed-in user can create and view their own orders.
-       * @deny (get) A user cannot access another user's orders (e.g., auth.uid is 'userA' but path is '/users/userB/...').
-       * @principle Enforces strict data ownership based on the document path.
+       * @allow (get, list, create) A user can manage their own orders.
+       * @allow (get, list, update, delete) An admin can view, update, or delete any user's order.
        */
       match /orders/{orderId} {
-        allow get: if isOwner(userId);
+        allow get: if isOwner(userId) || isAdmin();
         allow list: if isOwner(userId);
         allow create: if isOwner(userId);
-        allow update: if isExistingOwner(userId);
-        allow delete: if isExistingOwner(userId);
+        allow update: if isExistingOwner(userId) || isAdmin();
+        allow delete: if isExistingOwner(userId) || isAdmin();
 
         /**
-         * @description Controls access to the items within a specific order.
+         * @description Controls access to items within an order.
          * @path /users/{userId}/orders/{orderId}/orderItems/{orderItemId}
-         * @allow (get, list, create) An authenticated user can create and view items within their own orders.
-         * @deny (update) A user tries to change the `orderId` of an item after it has been created.
-         * @principle Inherits ownership from the parent document path and validates relational integrity.
+         * @principle Inherits ownership from the parent document path. Admins also inherit access.
          */
         match /orderItems/{orderItemId} {
-          allow get: if isOwner(userId);
-          allow list: if isOwner(userId);
+          allow get: if isOwner(userId) || isAdmin();
+          allow list: if isOwner(userId) || isAdmin();
           allow create: if isOwner(userId) && request.resource.data.orderId == orderId;
-          allow update: if isExistingOwner(userId) && request.resource.data.orderId == resource.data.orderId;
-          allow delete: if isExistingOwner(userId);
+          allow update: if (isExistingOwner(userId) || isAdmin()) && request.resource.data.orderId == resource.data.orderId;
+          allow delete: if isExistingOwner(userId) || isAdmin();
         }
       }
     }
+
+    /**
+     * @description Enables collection group queries for admins.
+     * @path /{path=**}/orders/{orderId}
+     * @allow (list) An admin can list all documents in any collection named 'orders'.
+     */
+    match /{path=**}/orders/{orderId} {
+      allow list: if isAdmin();
+    }
   }
 }
+    

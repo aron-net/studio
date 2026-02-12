@@ -35,11 +35,15 @@ export function StepPlaceOrder() {
 
     const totalPrice = product.price * quantity;
 
+    // Construct the base order object
     const newOrder: Omit<Order, 'id'> = {
+      userId: user.uid,
       orderDate: new Date().toISOString(),
       totalAmount: totalPrice,
       fulfillmentMethod: fulfillmentMethod,
       phoneNumber: phone,
+      status: 'Placed',
+      // Conditionally add fulfillment-specific fields
       ...(fulfillmentMethod === 'delivery'
         ? { deliveryAddress: deliveryAddress, landmark: landmark }
         : { pickupPointId: pickupPoint }),
@@ -135,3 +139,5 @@ export function StepPlaceOrder() {
     </div>
   );
 }
+
+    
