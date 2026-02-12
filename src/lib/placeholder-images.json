@@ -1,3 +1,205 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Hero banner for Valentine's specials",
+      "imageUrl": "https://images.unsplash.com/photo-1770733696552-14ec00705ea8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2YWxlbnRpbmVzJTIwY29zbWV0aWNzfGVufDB8fHx8MTc3MDg2MDAzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "valentines cosmetics"
+    },
+    {
+      "id": "1",
+      "imageUrl": "https://images.unsplash.com/photo-1633793565852-04e2a1482614?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb3NtZXRpYyUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic package"
+    },
+    {
+      "id": "2",
+      "imageUrl": "https://images.unsplash.com/photo-1759563874662-0cd5fb77f469?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiZWF1dHklMjBib3h8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty box"
+    },
+    {
+      "id": "3",
+      "imageUrl": "https://images.unsplash.com/photo-1571782742478-0816a4773a10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxza2luY2FyZSUyMHNldHxlbnwwfHx8fDE3NzA4MTM2Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "skincare set"
+    },
+    {
+      "id": "4",
+      "imageUrl": "https://images.unsplash.com/photo-1636755776192-588cc9fe251f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnaWZ0JTIwcGFja2FnZXxlbnwwfHx8fDE3NzA4MzU5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gift package"
+    },
+    {
+      "id": "5",
+      "imageUrl": "https://images.unsplash.com/photo-1678695407715-4b13699b5052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb3NtZXRpYyUyMGdpZnR8ZW58MHx8fHwxNzcwODYwMDMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic gift"
+    },
+    {
+      "id": "6",
+      "imageUrl": "https://images.unsplash.com/photo-1612975325828-36d93483c668?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx2YWxlbnRpbmUlMjBnaWZ0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "valentine gift"
+    },
+    {
+      "id": "7",
+      "imageUrl": "https://images.unsplash.com/photo-1587304946998-46c19a031b44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyZnVtZSUyMHNldHxlbnwwfHx8fDE3NzA4NjAwMzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume set"
+    },
+    {
+      "id": "8",
+      "imageUrl": "https://images.unsplash.com/photo-1579101097835-d7581af728e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFrZXVwJTIwa2l0fGVufDB8fHx8MTc3MDg2MDAzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "makeup kit"
+    },
+    {
+      "id": "9",
+      "imageUrl": "https://images.unsplash.com/photo-1590156352123-30ceb8ac96b8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxsdXh1cnklMjBjb3NtZXRpY3N8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury cosmetics"
+    },
+    {
+      "id": "10",
+      "imageUrl": "https://images.unsplash.com/photo-1580870069867-74c57ee1bb07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBwcm9kdWN0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty product"
+    },
+    {
+      "id": "11",
+      "imageUrl": "https://images.unsplash.com/photo-1633265484557-e298493cb162?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb3NtZXRpYyUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic package"
+    },
+    {
+      "id": "12",
+      "imageUrl": "https://images.unsplash.com/photo-1759563871370-692ab3de97ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxiZWF1dHklMjBib3h8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty box"
+    },
+    {
+      "id": "13",
+      "imageUrl": "https://images.unsplash.com/photo-1656147961287-3f91d30e086e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxza2luY2FyZSUyMHNldHxlbnwwfHx8fDE3NzA4MTM2Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "skincare set"
+    },
+    {
+      "id": "14",
+      "imageUrl": "https://images.unsplash.com/photo-1637291453780-7524ca448262?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxnaWZ0JTIwcGFja2FnZXxlbnwwfHx8fDE3NzA4MzU5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gift package"
+    },
+    {
+      "id": "15",
+      "imageUrl": "https://images.unsplash.com/photo-1678695232855-19883ebbe9a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb3NtZXRpYyUyMGdpZnR8ZW58MHx8fHwxNzcwODYwMDMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic gift"
+    },
+    {
+      "id": "16",
+      "imageUrl": "https://images.unsplash.com/photo-1640253621029-7ec13d3b1ece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2YWxlbnRpbmUlMjBnaWZ0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "valentine gift"
+    },
+    {
+      "id": "17",
+      "imageUrl": "https://images.unsplash.com/photo-1587304883224-b1b6e004a97a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwZXJmdW1lJTIwc2V0fGVufDB8fHx8MTc3MDg2MDAzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume set"
+    },
+    {
+      "id": "18",
+      "imageUrl": "https://images.unsplash.com/photo-1600634999623-864991678406?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtYWtldXAlMjBraXR8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "makeup kit"
+    },
+    {
+      "id": "19",
+      "imageUrl": "https://images.unsplash.com/photo-1591375372245-6d76eb0531cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsdXh1cnklMjBjb3NtZXRpY3N8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury cosmetics"
+    },
+    {
+      "id": "20",
+      "imageUrl": "https://images.unsplash.com/photo-1556228720-195a672e8a03?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxiZWF1dHklMjBwcm9kdWN0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty product"
+    },
+    {
+      "id": "21",
+      "imageUrl": "https://images.unsplash.com/photo-1633793566023-a74b74104acb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb3NtZXRpYyUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic package"
+    },
+    {
+      "id": "22",
+      "imageUrl": "https://images.unsplash.com/photo-1759563874687-bc882182c3be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiZWF1dHklMjBib3h8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty box"
+    },
+    {
+      "id": "23",
+      "imageUrl": "https://images.unsplash.com/photo-1656147962013-433749c7dc60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c2tpbmNhcmUlMjBzZXR8ZW58MHx8fHwxNzcwODEzNjc5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "skincare set"
+    },
+    {
+      "id": "24",
+      "imageUrl": "https://images.unsplash.com/photo-1574125776603-485fd69c70dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2lmdCUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODM1OTA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gift package"
+    },
+    {
+      "id": "25",
+      "imageUrl": "https://images.unsplash.com/photo-1678695521719-0225e51632bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y29zbWV0aWMlMjBnaWZ0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic gift"
+    },
+    {
+      "id": "26",
+      "imageUrl": "https://images.unsplash.com/photo-1621750819008-a1a7403d1e63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2YWxlbnRpbmUlMjBnaWZ0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "valentine gift"
+    },
+    {
+      "id": "27",
+      "imageUrl": "https://images.unsplash.com/photo-1508771400123-e194ad75c0e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJmdW1lJTIwc2V0fGVufDB8fHx8MTc3MDg2MDAzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume set"
+    },
+    {
+      "id": "28",
+      "imageUrl": "https://images.unsplash.com/photo-1591019479261-1a103585c559?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWtldXAlMjBraXR8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "makeup kit"
+    },
+    {
+      "id": "29",
+      "imageUrl": "https://images.unsplash.com/photo-1590156352256-39e4c6eba54e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsdXh1cnklMjBjb3NtZXRpY3N8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury cosmetics"
+    },
+    {
+      "id": "30",
+      "imageUrl": "https://images.unsplash.com/photo-1608571423539-e951b9b3871e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxiZWF1dHklMjBwcm9kdWN0fGVufDB8fHx8MTc3MDg2MDAzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty product"
+    },
+    {
+      "id": "31",
+      "imageUrl": "https://images.unsplash.com/photo-1678140706470-adc675a31de7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb3NtZXRpYyUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic package"
+    },
+    {
+      "id": "32",
+      "imageUrl": "https://images.unsplash.com/photo-1759563874687-bc882182c3be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiZWF1dHklMjBib3h8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty box"
+    },
+    {
+      "id": "33",
+      "imageUrl": "https://images.unsplash.com/photo-1739961364528-64f6afe084e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxza2luY2FyZSUyMHNldHxlbnwwfHx8fDE3NzA4MTM2Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "skincare set"
+    },
+    {
+      "id": "34",
+      "imageUrl": "https://images.unsplash.com/photo-1574125776603-485fd69c70dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2lmdCUyMHBhY2thZ2V8ZW58MHx8fHwxNzcwODM1OTA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gift package"
+    },
+    {
+      "id": "35",
+      "imageUrl": "https://images.unsplash.com/photo-1678695407715-4b13699b5052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb3NtZXRpYyUyMGdpZnR8ZW58MHx8fHwxNzcwODYwMDMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cosmetic gift"
+    },
+    {
+      "id": "36",
+      "imageUrl": "https://images.unsplash.com/photo-1640253620174-918ce90d9231?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dmFsZW50aW5lJTIwZ2lmdHxlbnwwfHx8fDE3NzA4NjAwMzF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "valentine gift"
+    },
+    {
+      "id": "37",
+      "imageUrl": "https://images.unsplash.com/photo-1587304946998-46c19a031b44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyZnVtZSUyMHNldHxlbnwwfHx8fDE3NzA4NjAwMzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume set"
+    },
+    {
+      "id": "38",
+      "imageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYWtldXAlMjBraXR8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "makeup kit"
+    },
+    {
+      "id": "39",
+      "imageUrl": "https://images.unsplash.com/photo-1590156423742-3c58d6b9d605?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxsdXh1cnklMjBjb3NtZXRpY3N8ZW58MHx8fHwxNzcwODYwMDMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury cosmetics"
+    }
+  ]
 }
