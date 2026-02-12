@@ -1,16 +1,17 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Heart, ShoppingBag } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
-import { useEffect } from 'react';
-import { useAuth, useUser, initiateAnonymousSignIn } from '@/firebase';
+import Link from "next/link";
+import Image from "next/image"; // <-- import Image
+import { ShoppingBag } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { useEffect } from "react";
+import { useAuth, useUser, initiateAnonymousSignIn } from "@/firebase";
 
 const navLinks = [
-    { href: '/', label: 'Shop' },
-    { href: '/orders', label: 'My Orders' },
+  { href: "/", label: "Shop" },
+  { href: "/orders", label: "My Orders" },
 ];
 
 export function AppHeader() {
@@ -28,30 +29,42 @@ export function AppHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto px-4 flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-6">
-          <Heart className="h-7 w-7 text-accent fill-accent" />
-          <span className="font-bold font-headline text-xl text-foreground">CP-Pharma</span>
+          {/* Replaced Heart with Image logo */}
+          <Image
+            src="/static/images/cp-pharma-logo.svg" // ensure this is inside public/static/images/
+            alt="CP-Pharma Logo"
+            width={100} // adjust size to match previous icon
+            height={100} // adjust size to match previous icon
+          />
+          {/* <span className="font-bold font-headline text-xl text-foreground">
+            CP-Pharma
+          </span> */}
         </Link>
+
         <nav className="flex items-center gap-4 text-sm lg:gap-6">
-            {navLinks.map(link => (
-                <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                        "transition-colors hover:text-foreground/80",
-                        pathname === link.href ? "text-foreground font-semibold" : "text-foreground/60"
-                    )}
-                >
-                    {link.label}
-                </Link>
-            ))}
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                pathname === link.href
+                  ? "text-foreground font-semibold"
+                  : "text-foreground/60",
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
+
         <div className="flex flex-1 items-center justify-end">
-            <Button variant="ghost" size="icon" asChild>
-                <Link href="/checkout">
-                    <ShoppingBag className="h-5 w-5" />
-                    <span className="sr-only">Checkout</span>
-                </Link>
-            </Button>
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/checkout">
+              <ShoppingBag className="h-5 w-5" />
+              <span className="sr-only">Checkout</span>
+            </Link>
+          </Button>
         </div>
       </div>
     </header>

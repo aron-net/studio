@@ -2,17 +2,22 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  currency: 'UGX';
-  shortDescription: string;
-  description: string;
+  currency: "UGX";
+  // shortDescription: string;
+  // description: string;
   contents: string[];
   images: string[];
   stock: number;
 };
 
-export type FulfillmentMethod = 'delivery' | 'pickup';
+export type FulfillmentMethod = "delivery" | "pickup";
 
-export type OrderStatus = 'Placed' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+export type OrderStatus =
+  | "Placed"
+  | "Processing"
+  | "Shipped"
+  | "Delivered"
+  | "Cancelled";
 
 // Corresponds to Order entity in backend.json
 export type Order = {
@@ -30,13 +35,11 @@ export type Order = {
 
 // Corresponds to OrderItem entity in backend.json
 export type OrderItem = {
-    id: string;
-    orderId: string;
-    productId: string;
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-    subtotalAmount: number;
-}
-
-    
+  id: string;
+  orderId: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  subtotalAmount: number;
+};
