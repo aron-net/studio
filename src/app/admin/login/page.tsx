@@ -42,9 +42,15 @@ export default function AdminLoginPage() {
       router.push('/admin/orders');
     } catch (error: any) {
       console.error('Login failed:', error);
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error.code === 'auth/invalid-credential') {
+        description = 'Invalid email or password. Please check your credentials and try again.';
+      } else if (error.message) {
+        description = error.message;
+      }
       toast({
         title: 'Login Failed',
-        description: error.message || 'Please check your credentials and try again.',
+        description: description,
         variant: 'destructive',
       });
     } finally {
