@@ -6,8 +6,8 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { AppFooter } from '@/components/layout/AppFooter';
 
 export const metadata: Metadata = {
-  title: "CP-Pharma: Celebrate Valentine's With Us",
-  description: 'Exclusive Valentine-themed cosmetic gift packages.',
+  title: "CP-Pharma: Gift a Spark of Love This Valentine's",
+  description: "Find the perfect Valentine's gift from our exclusive collection of cosmetic packages. Unforgettable beauty, crafted with love.",
 };
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -25,7 +25,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased flex flex-col h-full" suppressHydrationWarning>
+      <body className="font-body antialiased flex flex-col h-full">
         <CheckoutProvider>
           <AppHeader />
           <main className="flex-grow">{children}</main>
