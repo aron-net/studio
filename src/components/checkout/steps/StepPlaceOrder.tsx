@@ -8,7 +8,8 @@ import { useState } from 'react';
 import type { Order, OrderItem } from '@/lib/types';
 import { ArrowLeft, Loader2, Send } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useFirebase, useUser, addDocumentNonBlocking } from '@/firebase';
+import { useFirebase, useUser } from '@/firebase';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { collection } from 'firebase/firestore';
 
 
@@ -38,10 +39,10 @@ export function StepPlaceOrder() {
       orderDate: new Date().toISOString(),
       totalAmount: totalPrice,
       fulfillmentMethod: fulfillmentMethod,
-      deliveryAddress: deliveryAddress || undefined,
-      landmark: landmark || undefined,
-      pickupPointId: pickupPoint || undefined,
       phoneNumber: phone,
+      ...(fulfillmentMethod === 'delivery'
+        ? { deliveryAddress: deliveryAddress, landmark: landmark }
+        : { pickupPointId: pickupPoint }),
     };
 
     try {
