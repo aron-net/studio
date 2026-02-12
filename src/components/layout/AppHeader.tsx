@@ -5,6 +5,8 @@ import { Heart, ShoppingBag } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { useEffect } from 'react';
+import { useAuth, useUser, initiateAnonymousSignIn } from '@/firebase';
 
 const navLinks = [
     { href: '/', label: 'Shop' },
@@ -13,6 +15,14 @@ const navLinks = [
 
 export function AppHeader() {
   const pathname = usePathname();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [isUserLoading, user, auth]);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">

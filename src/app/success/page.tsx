@@ -1,44 +1,44 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import type { Order } from '@/lib/types';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useEffect } from 'react';
+import type { Order, OrderItem } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { CheckCircle2, Package } from 'lucide-react';
+import { useUser, useDoc, useCollection, useFirebase, useMemoFirebase } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user, isUserLoading: isUserLoading } = useUser();
+  const { firestore } = useFirebase();
+
   const orderId = searchParams.get('orderId');
-  const [orders] = useLocalStorage<Order[]>('orders', []);
-  const [order, setOrder] = useState<Order | null>(null);
+
+  const orderRef = useMemoFirebase(() => {
+    if (!user || !orderId || !firestore) return null;
+    return doc(firestore, 'users', user.uid, 'orders', orderId);
+  }, [user, orderId, firestore]);
+  const { data: order, isLoading: isOrderLoading } = useDoc<Order>(orderRef);
+  
+  const orderItemsRef = useMemoFirebase(() => {
+    if (!user || !orderId || !firestore) return null;
+    return collection(firestore, 'users', user.uid, 'orders', orderId, 'orderItems');
+  }, [user, orderId, firestore]);
+  const { data: orderItems, isLoading: areItemsLoading } = useCollection<OrderItem>(orderItemsRef);
 
   useEffect(() => {
-    if (!orderId) {
+    if (!isUserLoading && !orderId) {
       router.replace('/');
-      return;
     }
-    const foundOrder = orders.find((o) => o.id === orderId);
-    if (foundOrder) {
-      setOrder(foundOrder);
-    } else {
-        // May still be writing to localStorage, wait a bit
-        setTimeout(() => {
-            const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]') as Order[];
-            const foundOrder = storedOrders.find((o) => o.id === orderId);
-            if (foundOrder) {
-                setOrder(foundOrder);
-            } else {
-                router.replace('/');
-            }
-        }, 500);
-    }
-  }, [orderId, orders, router]);
+  }, [orderId, router, isUserLoading]);
+  
+  const orderItem = orderItems?.[0];
 
-  if (!order) {
+  if (isUserLoading || isOrderLoading || areItemsLoading || !order || !orderItem) {
     return (
         <div className="flex items-center justify-center h-full">
             <div className="flex items-center space-x-2 text-muted-foreground">
@@ -59,14 +59,14 @@ export default function SuccessPage() {
         </CardHeader>
         <CardContent className="space-y-6 text-left">
             <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <h3 className="font-semibold text-lg">{order.product.name}</h3>
+                <h3 className="font-semibold text-lg">{orderItem.productName}</h3>
                 <div className="flex justify-between">
                     <span className="text-muted-foreground">Quantity</span>
-                    <span>{order.quantity}</span>
+                    <span>{orderItem.quantity}</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg">
                     <span className="text-muted-foreground">Total</span>
-                    <span>{order.product.currency} {order.totalPrice.toLocaleString()}</span>
+                    <span>UGX {order.totalAmount.toLocaleString()}</span>
                 </div>
             </div>
 
@@ -80,9 +80,9 @@ export default function SuccessPage() {
                             {order.landmark && <p><strong>Landmark:</strong> {order.landmark}</p>}
                         </>
                     ) : (
-                        <p><strong>Pickup Point:</strong> {order.pickupPoint}</p>
+                        <p><strong>Pickup Point:</strong> {order.pickupPointId}</p>
                     )}
-                    <p><strong>Phone:</strong> {order.phone}</p>
+                    <p><strong>Phone:</strong> {order.phoneNumber}</p>
                 </div>
             </div>
           

@@ -5,50 +5,80 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { Order } from '@/lib/types';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import type { Order, OrderItem } from '@/lib/types';
 import { ArrowLeft, Loader2, Send } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useFirebase, useUser, addDocumentNonBlocking } from '@/firebase';
+import { collection } from 'firebase/firestore';
+
 
 export function StepPlaceOrder() {
   const { product, quantity, fulfillmentMethod, deliveryAddress, landmark, pickupPoint, phone, prevStep, resetCheckout } = useCheckout();
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [orders, setOrders] = useLocalStorage<Order[]>('orders', []);
+  const { firestore } = useFirebase();
+  const { user } = useUser();
 
-  const handlePlaceOrder = () => {
-    if (!product) return;
+  const handlePlaceOrder = async () => {
+    if (!product || !user || !firestore || !fulfillmentMethod) {
+        toast({
+            title: 'Error',
+            description: 'Could not place order. Please try again.',
+            variant: 'destructive',
+        });
+        return;
+    };
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const orderId = `${Date.now()}${Math.random().toString(36).substring(2, 8)}`;
-      const totalPrice = product.price * quantity;
+    const totalPrice = product.price * quantity;
 
-      const newOrder: Order = {
-        id: orderId,
-        product,
-        quantity,
-        totalPrice,
-        fulfillmentMethod: fulfillmentMethod!,
-        deliveryAddress,
-        landmark,
-        pickupPoint,
-        phone,
-        timestamp: new Date().toISOString(),
-      };
+    const newOrder: Omit<Order, 'id'> = {
+      orderDate: new Date().toISOString(),
+      totalAmount: totalPrice,
+      fulfillmentMethod: fulfillmentMethod,
+      deliveryAddress: deliveryAddress || undefined,
+      landmark: landmark || undefined,
+      pickupPointId: pickupPoint || undefined,
+      phoneNumber: phone,
+    };
 
-      setOrders([...orders, newOrder]);
-      setIsLoading(false);
-      toast({
-        title: 'Order Placed!',
-        description: 'Your order has been successfully submitted.',
-      });
-      resetCheckout();
-      router.push(`/success?orderId=${orderId}`);
-    }, 800);
+    try {
+        const ordersCollection = collection(firestore, 'users', user.uid, 'orders');
+        const orderDocRef = await addDocumentNonBlocking(ordersCollection, newOrder);
+
+        if (orderDocRef) {
+            const newOrderItem: Omit<OrderItem, 'id' | 'orderId'> = {
+                productId: product.id,
+                productName: product.name,
+                quantity: quantity,
+                unitPrice: product.price,
+                subtotalAmount: totalPrice,
+            };
+            const orderItemsCollection = collection(firestore, 'users', user.uid, 'orders', orderDocRef.id, 'orderItems');
+            await addDocumentNonBlocking(orderItemsCollection, {...newOrderItem, orderId: orderDocRef.id});
+            
+            setIsLoading(false);
+            toast({
+                title: 'Order Placed!',
+                description: 'Your order has been successfully submitted.',
+            });
+            resetCheckout();
+            router.push(`/success?orderId=${orderDocRef.id}`);
+        } else {
+            throw new Error('Failed to create order document.');
+        }
+
+    } catch(e) {
+        console.error("Failed to place order: ", e);
+        setIsLoading(false);
+        toast({
+            title: 'Order Failed',
+            description: 'There was a problem placing your order. Please try again.',
+            variant: 'destructive',
+        });
+    }
   };
   
   if (!product || !fulfillmentMethod) return null;

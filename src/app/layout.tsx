@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { CheckoutProvider } from '@/context/CheckoutContext';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { AppFooter } from '@/components/layout/AppFooter';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: "CP-Pharma: Gift a Spark of Love This Valentine's",
@@ -26,12 +27,14 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased flex flex-col h-full" suppressHydrationWarning>
-        <CheckoutProvider>
-          <AppHeader />
-          <main className="flex-grow">{children}</main>
-          <AppFooter />
-          <Toaster />
-        </CheckoutProvider>
+        <FirebaseClientProvider>
+          <CheckoutProvider>
+            <AppHeader />
+            <main className="flex-grow">{children}</main>
+            <AppFooter />
+            <Toaster />
+          </CheckoutProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

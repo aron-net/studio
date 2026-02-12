@@ -1,26 +1,50 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useUser, useCollection, useMemoFirebase, useFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 import type { Order } from '@/lib/types';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ShoppingBag } from 'lucide-react';
+import { Loader2, ShoppingBag } from 'lucide-react';
+import { OrderCard } from '@/components/orders/OrderCard';
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useLocalStorage<Order[]>('orders', []);
-  const [isClient, setIsClient] = useState(false);
+  const { user, isUserLoading } = useUser();
+  const { firestore } = useFirebase();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const ordersQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return collection(firestore, `users/${user.uid}/orders`);
+  }, [user, firestore]);
 
-  if (!isClient) {
-    return null;
+  const { data: orders, isLoading: areOrdersLoading } = useCollection<Order>(ordersQuery);
+
+  if (isUserLoading || areOrdersLoading) {
+    return (
+        <div className="flex items-center justify-center h-full">
+            <div className="flex items-center space-x-2 text-muted-foreground">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span>Loading orders...</span>
+            </div>
+        </div>
+    );
   }
-  
-  const sortedOrders = [...orders].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card className="text-center py-16">
+          <CardHeader>
+            <CardTitle>Please refresh the page</CardTitle>
+            <CardDescription>We're getting things ready for you.</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  const sortedOrders = orders ? [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()) : [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -43,58 +67,7 @@ export default function OrdersPage() {
       ) : (
         <div className="space-y-6">
           {sortedOrders.map((order) => (
-            <Card key={order.id} className="overflow-hidden">
-              <CardHeader className="bg-muted/50">
-                <div className="flex flex-wrap justify-between items-center gap-2">
-                    <div>
-                        <CardTitle className="text-lg">Order #{order.id.slice(-6)}</CardTitle>
-                        <CardDescription>
-                        Placed on {new Date(order.timestamp).toLocaleDateString()}
-                        </CardDescription>
-                    </div>
-                    <div className="text-right">
-                        <p className="font-semibold text-foreground">{order.product.name}</p>
-                        <p className="text-muted-foreground">
-                            {order.quantity} x {order.product.currency}{' '}
-                            {order.product.price.toLocaleString()}
-                        </p>
-                    </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 grid gap-4 md:grid-cols-2">
-                <div>
-                  <h3 className="font-semibold mb-2">Fulfillment Details</h3>
-                  <p className="text-sm">
-                    <strong>Method:</strong> {order.fulfillmentMethod}
-                  </p>
-                  {order.fulfillmentMethod === 'delivery' ? (
-                    <>
-                      <p className="text-sm">
-                        <strong>Address:</strong> {order.deliveryAddress}
-                      </p>
-                      {order.landmark && (
-                        <p className="text-sm">
-                          <strong>Landmark:</strong> {order.landmark}
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-sm">
-                      <strong>Pickup Point:</strong> {order.pickupPoint}
-                    </p>
-                  )}
-                  <p className="text-sm">
-                    <strong>Phone:</strong> {order.phone}
-                  </p>
-                </div>
-                <div className="md:text-right self-end">
-                    <p className="text-sm text-muted-foreground">Total</p>
-                  <p className="text-2xl font-bold font-headline text-accent">
-                    {order.product.currency} {order.totalPrice.toLocaleString()}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <OrderCard key={order.id} order={order} userId={user.uid} />
           ))}
         </div>
       )}
