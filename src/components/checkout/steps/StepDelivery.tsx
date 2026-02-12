@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useEffect, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useState, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { clarifyAddressAction } from '@/app/checkout/actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Lightbulb, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
@@ -43,7 +43,7 @@ export function StepDelivery() {
   const { deliveryAddress, landmark, setDeliveryAddress, setLandmark, nextStep, prevStep } = useCheckout();
   const [localAddress, setLocalAddress] = useState(deliveryAddress);
   const [localLandmark, setLocalLandmark] = useState(landmark);
-  const [state, formAction] = useFormState(clarifyAddressAction, initialState);
+  const [state, formAction] = useActionState(clarifyAddressAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
