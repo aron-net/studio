@@ -10,7 +10,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-  const productImages = product.images.map(imgId => PlaceHolderImages.find(p => p.id === imgId.toString().replace('/IMG_', '').replace('.HEIC', ''))).filter(Boolean);
+  const productImages = product.images.map(imgId => PlaceHolderImages.find(p => p.id === imgId)).filter(Boolean);
 
   return (
     <div className="container mx-auto px-4 py-8">

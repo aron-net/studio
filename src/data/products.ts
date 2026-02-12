@@ -11,12 +11,11 @@ const packageImages = [
   "/IMG_3821.HEIC", "/IMG_3822.HEIC", "/IMG_3823.HEIC", "/IMG_3824.HEIC"
 ];
 
-const getGalleryImages = (mainImage: string, allImages: string[], count: number) => {
-  const gallery = [mainImage];
-  let currentIndex = allImages.indexOf(mainImage);
-  for (let i = 0; i < count - 1; i++) {
-    currentIndex = (currentIndex + 1) % allImages.length;
-    gallery.push(allImages[currentIndex]);
+const getGalleryImages = (startIndex: number, totalProducts: number, count: number) => {
+  const gallery: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const imageIndex = (startIndex + i) % totalProducts;
+    gallery.push((imageIndex + 1).toString());
   }
   return gallery;
 }
@@ -127,6 +126,6 @@ export const products: Product[] = packageImages.map((image, index) => ({
   shortDescription: descriptions[index].substring(0, 70) + '...',
   description: descriptions[index],
   contents: contentsList[index],
-  images: getGalleryImages(image, packageImages, 3).map(img => img.replace('/IMG_', '').replace('.HEIC', '')),
+  images: getGalleryImages(index, packageImages.length, 3),
   stock: Math.floor(Math.random() * 50) + 1,
 }));
