@@ -100,8 +100,9 @@ export function useCollection<T = any>(
         setData(null)
         setIsLoading(false)
 
-        // trigger global error propagation
-        errorEmitter.emit('permission-error', contextualError);
+        // The global error listener is intentionally NOT invoked here.
+        // This hook returns an `error` object, allowing the calling
+        // component to handle the permission error gracefully in its UI.
       }
     );
 
