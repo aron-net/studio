@@ -25,7 +25,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased flex flex-col h-full">
+      <body className="font-body antialiased flex flex-col h-full" suppressHydrationWarning>
         <CheckoutProvider>
           <AppHeader />
           <main className="flex-grow">{children}</main>
