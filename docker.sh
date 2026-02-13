@@ -11,13 +11,22 @@ export VERSION=2026021302-valentine
 #nvm use 20
 node -v 20
 
+
 npm run build
 
-rm -r dist/cp-pharma-valentine
-
+# Clean up previous build directory if exists
+rm -rf dist/cp-pharma-valentine
 mkdir -p dist/cp-pharma-valentine
 
-cp -R dist/* dist/cp-pharma-valentine/
+# Copy Next.js build output and necessary files
+cp -R .next dist/cp-pharma-valentine/.next
+cp -R public dist/cp-pharma-valentine/public
+cp package.json dist/cp-pharma-valentine/
+cp package-lock.json dist/cp-pharma-valentine/ 2>/dev/null || true
+cp next.config.* dist/cp-pharma-valentine/ 2>/dev/null || true
+cp -R src dist/cp-pharma-valentine/src
+cp tsconfig.json dist/cp-pharma-valentine/ 2>/dev/null || true
+cp Dockerfile dist/cp-pharma-valentine/
 
 cp ./GKE/kubernetes/dockerfile ./dist/cp-pharma-valentine
 cp ./GKE/kubernetes/nginx-custom.conf ./dist/cp-pharma-valentine
