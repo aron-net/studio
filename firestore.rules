@@ -11,13 +11,11 @@
  * - /products/{productId}: Publicly readable product catalog.
  * - /pickupPoints/{pickupPointId}: Publicly readable pickup locations.
  * - /users/{userId}/orders/{orderId}: User-specific orders, private to the user but accessible by admins.
- * - /admins/{userId}: A list of UIDs for users with admin privileges.
  *
  * Key Security Decisions:
  * - Public Data: `/products` and `/pickupPoints` are globally readable. Writes are blocked from the client.
  * - User-Owned Data: Data under `/users/{userId}` is private to that user, enforced by matching `request.auth.uid` with the `{userId}` in the path.
- * - Admin Access: Users whose UID is a document ID in the `/admins` collection have read/write access to all orders for management purposes.
- * - Admin Collection Security: The `/admins` collection is not writeable from the client to prevent privilege escalation. Admins must be added via the Firebase Console.
+ * - Admin Access: A user with the email 'abraham@clinicpesa.com' has read/write access to all orders.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -40,11 +38,11 @@ service cloud.firestore {
     }
 
     /**
-     * Returns true if the requesting user is an admin.
-     * Admin status is determined by the existence of their UID in the /admins collection.
+     * Returns true if the requesting user is the admin.
+     * Admin status is determined by matching the user's email.
      */
     function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+      return isSignedIn() && request.auth.token.email == 'abraham@clinicpesa.com';
     }
 
     // ------------------------------------------------------------------------
@@ -62,19 +60,8 @@ service cloud.firestore {
     }
     
     // ------------------------------------------------------------------------
-    // Admin & User-Specific Data
+    // User-Specific Data
     // ------------------------------------------------------------------------
-
-    /**
-     * @description Manages the list of administrators.
-     * @path /admins/{userId}
-     * @allow (get) Any signed-in user can check for admin existence (required for the `exists()` call in rules).
-     * @deny (list, write) Listing all admins or modifying the admin list from the client is prohibited for security. Admins must be managed via the Firebase Console.
-     */
-    match /admins/{userId} {
-        allow get: if isSignedIn();
-        allow list, create, update, delete: if false;
-    }
 
     match /users/{userId} {
       allow get, list, create, update, delete: if false;
@@ -117,4 +104,3 @@ service cloud.firestore {
     }
   }
 }
-    

@@ -4,12 +4,14 @@ import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
 import { collectionGroup, query, updateDoc, doc } from 'firebase/firestore';
 import type { Order, OrderStatus } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import type { User } from 'firebase/auth';
 import Image from 'next/image';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Done', 'Cancelled'];
 
@@ -48,20 +50,15 @@ export function AdminOrderList({ user }: { user: User | null }) {
             <Card className="text-center bg-destructive/10 border-destructive">
                 <CardHeader>
                     <CardTitle>Permission Denied</CardTitle>
-                    <CardDescription className="text-destructive/80 text-left space-y-4">
-                        <p>You do not have permission to view this page. To get access, follow these steps:</p>
-                        <ol className="list-decimal list-inside space-y-2 bg-background/50 p-4 rounded-md text-sm">
-                            <li><strong>Copy your User ID below:</strong>
-                                <code className="block bg-muted p-2 rounded font-mono text-xs my-2 break-all">{user?.uid}</code>
-                            </li>
-                            <li>Go to your project's <strong>Firestore Database</strong> in the Firebase Console.</li>
-                            <li>Click <strong>+ Start collection</strong>, and name it <strong className="font-mono">admins</strong>.</li>
-                            <li>For the <strong>Document ID</strong>, paste your User ID you just copied.</li>
-                            <li>Click <strong>Save</strong> (you can leave the fields inside the document empty).</li>
-                            <li>Refresh this page.</li>
-                        </ol>
+                    <CardDescription className="text-destructive/80">
+                        You do not have permission to view this page. Please log in as the administrator.
                     </CardDescription>
                 </CardHeader>
+                <CardContent>
+                    <Button asChild>
+                        <Link href="/admin/login">Go to Admin Login</Link>
+                    </Button>
+                </CardContent>
             </Card>
         );
     }

@@ -207,19 +207,6 @@
         "unitPrice",
         "subtotalAmount"
       ]
-    },
-    "Admin": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Admin",
-      "type": "object",
-      "description": "Represents an admin user with elevated privileges.",
-      "properties": {
-        "userId": {
-          "type": "string",
-          "description": "The UID of the user who is an admin."
-        }
-      },
-      "required": ["userId"]
     }
   },
   "auth": {
@@ -305,26 +292,8 @@
             }
           ]
         }
-      },
-      {
-        "path": "/admins/{userId}",
-        "definition": {
-          "entityName": "Admin",
-          "schema": {
-            "$ref": "#/backend/entities/Admin"
-          },
-          "description": "Collection of admin user UIDs. Used for role-based access control. Documents should be created manually in the Firebase console with the document ID being the user's UID.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The UID of an admin user."
-            }
-          ]
-        }
       }
     ],
     "reasoning": "The Firestore structure is designed following the core principles of Authorization Independence, Structural Segregation, and clear Access Modeling to ensure security, scalability, and debuggability. \n\n**Authorization Independence:**\n1.  **Public Collections (`/products`, `/pickupPoints`):** These collections hold globally accessible data. Access rules are simple (`allow read: true;`), requiring no authorization context beyond public access, thus naturally achieving authorization independence.\n2.  **User-Owned Data (`/users/{userId}/orders`, `/users/{userId}/orders/{orderId}/orderItems`):** For private user data, authorization independence is achieved by embedding the `userId` directly into the path. This ensures that the `request.auth.uid` is directly available as a path segment (`userId`) within security rules for `orders` and `orderItems`. This eliminates the need for expensive and complex `get()` calls to a parent document or to denormalize an `ownerId` field into every `order` or `orderItem` document. The ownership is explicitly defined by the path itself, simplifying rules to `allow read, write: if request.auth.uid == userId;`.\n\n**Structural Segregation (Homogeneous Security Posture):**\n1.  **`/products`:** All documents in this collection represent public product information. They share the same security posture: globally readable.\n2.  **`/pickupPoints`:** All documents here are public pickup location details, sharing the same globally readable security posture.\n3.  **`/users/{userId}/orders`:** All documents within a specific user's `orders` subcollection are owned by that user. Their security posture is private to the `userId` in the path.\n4.  **`/users/{userId}/orders/{orderId}/orderItems`:** Similarly, all order items within a specific order are privately accessible only by the owning `userId`.\n\nThis segregation ensures that security rules are straightforward and apply uniformly to all documents within a given collection or subcollection.\n\n**QAPs (Rules are not Filters):**\n1.  **Public Collections (`/products`, `/pickupPoints`):** `list` operations on these collections are inherently secure and efficient as all documents are publicly accessible. No filtering is required at the rule level.\n2.  **User-Owned Data (`/users/{userId}/orders`):** When querying for a user's orders (e.g., `db.collection('users').doc(uid).collection('orders').get()`), the `list` operation is secure because the `userId` is part of the path. Firestore's security rules can directly enforce that `userId == request.auth.uid`. This implicitly filters the results to only the current user's orders, fulfilling the QAP principle by ensuring that the rule matches the query's scope and prevents unauthorized data from being returned or even processed.\n3.  **User-Owned Nested Data (`/users/{userId}/orders/{orderId}/orderItems`):** `list` operations for order items within a specific order are similarly secured by the `userId` in the parent path, ensuring only the authenticated user can list their own order items for their own orders."
   }
 }
-
-    

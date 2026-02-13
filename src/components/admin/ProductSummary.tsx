@@ -4,11 +4,13 @@ import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
 import { collectionGroup, query } from 'firebase/firestore';
 import type { Order } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { User } from 'firebase/auth';
 import Image from 'next/image';
 import { useMemo } from 'react';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 type ProductSummaryData = {
     productName: string;
@@ -61,11 +63,14 @@ export function ProductSummary({ user }: { user: User | null }) {
                 <CardHeader>
                     <CardTitle>Permission Denied</CardTitle>
                     <CardDescription className="text-destructive/80">
-                        You do not have permission to view product analytics.
-                        <br />
-                        <small>To become an admin, add your user ID to the 'admins' collection in Firestore. Your user ID is: <code className="bg-destructive/20 p-1 rounded font-mono">{user?.uid}</code></small>
+                        You do not have permission to view product analytics. Please log in as the administrator.
                     </CardDescription>
                 </CardHeader>
+                <CardContent>
+                    <Button asChild>
+                        <Link href="/admin/login">Go to Admin Login</Link>
+                    </Button>
+                </CardContent>
             </Card>
         );
     }
