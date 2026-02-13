@@ -4,6 +4,7 @@ import { useCollection, useFirebase, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '../ui/skeleton';
+import Image from 'next/image';
 
 type OrderCardProps = {
     order: Order;
@@ -33,13 +34,24 @@ export function OrderCard({ order, userId }: OrderCardProps) {
                     Placed on {new Date(order.orderDate).toLocaleDateString()}
                     </CardDescription>
                 </div>
-                {isLoading ? <Skeleton className="h-10 w-32" /> : item && (
-                    <div className="text-right">
-                        <p className="font-semibold text-foreground">{item.productName}</p>
-                        <p className="text-muted-foreground">
-                            {item.quantity} x UGX{' '}
-                            {item.unitPrice.toLocaleString()}
-                        </p>
+                {isLoading ? <Skeleton className="h-16 w-48" /> : item && (
+                    <div className="flex items-center gap-4 text-right">
+                        <div>
+                            <p className="font-semibold text-foreground">{item.productName}</p>
+                            <p className="text-muted-foreground">
+                                {item.quantity} x UGX{' '}
+                                {item.unitPrice.toLocaleString()}
+                            </p>
+                        </div>
+                        {item.imageUrl && (
+                            <Image 
+                                src={item.imageUrl}
+                                alt={item.productName}
+                                width={64}
+                                height={64}
+                                className="rounded-md object-cover w-16 h-16"
+                            />
+                        )}
                     </div>
                 )}
             </div>

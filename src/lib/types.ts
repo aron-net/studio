@@ -31,6 +31,8 @@ export type Order = {
   pickupPointId?: string;
   phoneNumber: string;
   status: OrderStatus;
+  productName?: string;
+  productImageUrl?: string;
 };
 
 // Corresponds to OrderItem entity in backend.json
@@ -42,4 +44,5 @@ export type OrderItem = {
   quantity: number;
   unitPrice: number;
   subtotalAmount: number;
+  imageUrl?: string;
 };

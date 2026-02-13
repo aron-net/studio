@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import type { User } from 'firebase/auth';
+import Image from 'next/image';
 
 const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
@@ -64,6 +65,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="w-[240px]">Item</TableHead>
                         <TableHead>Order ID</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>Customer Phone</TableHead>
@@ -74,6 +76,22 @@ export function AdminOrderList({ user }: { user: User | null }) {
                 <TableBody>
                     {sortedOrders.length > 0 ? sortedOrders.map(order => (
                         <TableRow key={order.id}>
+                            <TableCell>
+                                <div className="flex items-center gap-4">
+                                    {order.productImageUrl ? (
+                                        <Image
+                                            src={order.productImageUrl}
+                                            alt={order.productName || 'Product Image'}
+                                            width={64}
+                                            height={64}
+                                            className="rounded-md object-cover w-16 h-16"
+                                        />
+                                    ) : (
+                                        <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Image</div>
+                                    )}
+                                    <span className="font-medium">{order.productName}</span>
+                                </div>
+                            </TableCell>
                             <TableCell className="font-mono text-xs">{order.id.slice(-6)}</TableCell>
                             <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                             <TableCell>{order.phoneNumber}</TableCell>
@@ -93,7 +111,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                         </TableRow>
                     )) : (
                         <TableRow>
-                            <TableCell colSpan={5} className="text-center h-24">No orders found.</TableCell>
+                            <TableCell colSpan={6} className="text-center h-24">No orders found.</TableCell>
                         </TableRow>
                     )}
                 </TableBody>

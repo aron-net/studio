@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFirebase, useUser } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection } from "firebase/firestore";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function StepPlaceOrder() {
   const {
@@ -42,6 +43,11 @@ export function StepPlaceOrder() {
 
     setIsLoading(true);
 
+    const productImage = PlaceHolderImages.find(
+      (p) => p.id === product.id.toString(),
+    );
+    const productImageUrl = productImage ? productImage.imageUrl : "";
+
     const totalPrice = product.price * quantity;
 
     // Construct the base order object
@@ -52,9 +58,11 @@ export function StepPlaceOrder() {
       fulfillmentMethod: fulfillmentMethod,
       phoneNumber: phone,
       status: "Placed",
+      productName: product.name,
+      productImageUrl: productImageUrl,
       // Conditionally add fulfillment-specific fields
       ...(fulfillmentMethod === "delivery"
-        ? { deliveryAddress: deliveryAddress, landmark: landmark }
+        ? { deliveryAddress: deliveryAddress || "", landmark: landmark || "" }
         : { pickupPointId: pickupPoint }),
     };
 
@@ -77,6 +85,7 @@ export function StepPlaceOrder() {
           quantity: quantity,
           unitPrice: product.price,
           subtotalAmount: totalPrice,
+          imageUrl: productImageUrl,
         };
         const orderItemsCollection = collection(
           firestore,

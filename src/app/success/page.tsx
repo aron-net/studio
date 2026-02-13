@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { CheckCircle2, Package } from 'lucide-react';
 import { useUser, useDoc, useCollection, useFirebase, useMemoFirebase } from '@/firebase';
 import { doc, collection } from 'firebase/firestore';
+import Image from 'next/image';
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
@@ -59,14 +60,27 @@ export default function SuccessPage() {
         </CardHeader>
         <CardContent className="space-y-6 text-left">
             <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <h3 className="font-semibold text-lg">{orderItem.productName}</h3>
-                <div className="flex justify-between">
-                    <span className="text-muted-foreground">Quantity</span>
-                    <span>{orderItem.quantity}</span>
-                </div>
-                <div className="flex justify-between font-bold text-lg">
-                    <span className="text-muted-foreground">Total</span>
-                    <span>UGX {order.totalAmount.toLocaleString()}</span>
+                <div className="flex items-start gap-4">
+                    {orderItem.imageUrl && (
+                        <Image 
+                            src={orderItem.imageUrl}
+                            alt={orderItem.productName}
+                            width={80}
+                            height={80}
+                            className="rounded-lg object-cover w-20 h-20"
+                        />
+                    )}
+                    <div className="flex-grow">
+                        <h3 className="font-semibold text-lg">{orderItem.productName}</h3>
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Quantity</span>
+                            <span>{orderItem.quantity}</span>
+                        </div>
+                        <div className="flex justify-between font-bold text-lg">
+                            <span className="text-muted-foreground">Total</span>
+                            <span>UGX {order.totalAmount.toLocaleString()}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
