@@ -48,10 +48,18 @@ export function AdminOrderList({ user }: { user: User | null }) {
             <Card className="text-center bg-destructive/10 border-destructive">
                 <CardHeader>
                     <CardTitle>Permission Denied</CardTitle>
-                    <CardDescription className="text-destructive/80">
-                        You do not have permission to view this page.
-                        <br />
-                        <small>To become an admin, add your user ID to the 'admins' collection in Firestore. Your user ID is: <code className="bg-destructive/20 p-1 rounded font-mono">{user?.uid}</code></small>
+                    <CardDescription className="text-destructive/80 text-left space-y-4">
+                        <p>You do not have permission to view this page. To get access, follow these steps:</p>
+                        <ol className="list-decimal list-inside space-y-2 bg-background/50 p-4 rounded-md text-sm">
+                            <li><strong>Copy your User ID below:</strong>
+                                <code className="block bg-muted p-2 rounded font-mono text-xs my-2 break-all">{user?.uid}</code>
+                            </li>
+                            <li>Go to your project's <strong>Firestore Database</strong> in the Firebase Console.</li>
+                            <li>Click <strong>+ Start collection</strong>, and name it <strong className="font-mono">admins</strong>.</li>
+                            <li>For the <strong>Document ID</strong>, paste your User ID you just copied.</li>
+                            <li>Click <strong>Save</strong> (you can leave the fields inside the document empty).</li>
+                            <li>Refresh this page.</li>
+                        </ol>
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -125,5 +133,3 @@ export function AdminOrderList({ user }: { user: User | null }) {
         </Card>
     );
 }
-
-    
