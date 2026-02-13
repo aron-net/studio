@@ -26,7 +26,11 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // Force a token refresh to ensure the latest auth claims are available for Firestore security rules.
+      if (userCredential.user) {
+        await userCredential.user.getIdToken(true);
+      }
       toast({
         title: 'Success',
         description: 'Logged in successfully. Redirecting...',
