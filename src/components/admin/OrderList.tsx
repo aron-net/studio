@@ -21,6 +21,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
 
     const allOrdersQuery = useMemoFirebase(() => {
         if (!firestore) return null;
+        // This query now requires admin privileges defined in firestore.rules
         return query(collectionGroup(firestore, 'orders'));
     }, [firestore]);
 

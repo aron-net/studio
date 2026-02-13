@@ -6,11 +6,20 @@ import { Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductSummary } from '@/components/admin/ProductSummary';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AdminOrdersPage() {
   const { user, isUserLoading } = useUser();
+  const router = useRouter();
 
-  if (isUserLoading) {
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.replace('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
+
+  if (isUserLoading || !user) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -18,14 +27,13 @@ export default function AdminOrdersPage() {
     );
   }
 
-  if (!user) {
-    // This case is handled by the redirect in AdminLoginPage, but good to have a fallback.
+  if (user.email !== 'abraham@clinicpesa.com') {
     return (
         <div className="container mx-auto px-4 py-8">
             <Card className="text-center">
                 <CardHeader>
                     <CardTitle>Access Denied</CardTitle>
-                    <CardDescription>You must be signed in to view this page.</CardDescription>
+                    <CardDescription>You do not have permission to view this page.</CardDescription>
                 </CardHeader>
             </Card>
         </div>
