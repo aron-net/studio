@@ -3,11 +3,13 @@
 import { useUser } from '@/firebase';
 import { AdminOrderList } from '@/components/admin/OrderList';
 import { Loader2 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductSummary } from '@/components/admin/ProductSummary';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function AdminOrdersPage() {
   const { user, isUserLoading } = useUser();
@@ -35,6 +37,11 @@ export default function AdminOrdersPage() {
                     <CardTitle>Access Denied</CardTitle>
                     <CardDescription>You do not have permission to view this page.</CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <Button asChild>
+                    <Link href="/admin/login">Go to Admin Login</Link>
+                  </Button>
+                </CardContent>
             </Card>
         </div>
     );
