@@ -16,7 +16,7 @@ export type OrderStatus =
   | "Placed"
   | "Processing"
   | "Shipped"
-  | "Delivered"
+  | "Done"
   | "Cancelled";
 
 // Corresponds to Order entity in backend.json
@@ -47,3 +47,5 @@ export type OrderItem = {
   subtotalAmount: number;
   imageUrl?: string;
 };
+
+    

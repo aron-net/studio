@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { User } from 'firebase/auth';
 import Image from 'next/image';
 
-const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Done', 'Cancelled'];
 
 export function AdminOrderList({ user }: { user: User | null }) {
     const { firestore } = useFirebase();
@@ -58,7 +58,11 @@ export function AdminOrderList({ user }: { user: User | null }) {
         );
     }
     
-    const sortedOrders = orders ? [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()) : [];
+    const sortedOrders = orders
+        ? [...orders]
+            .filter(order => order.status !== 'Done')
+            .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
+        : [];
 
     return (
         <Card>
@@ -113,7 +117,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                         </TableRow>
                     )) : (
                         <TableRow>
-                            <TableCell colSpan={7} className="text-center h-24">No orders found.</TableCell>
+                            <TableCell colSpan={7} className="text-center h-24">No active orders found.</TableCell>
                         </TableRow>
                     )}
                 </TableBody>
@@ -121,3 +125,5 @@ export function AdminOrderList({ user }: { user: User | null }) {
         </Card>
     );
 }
+
+    
