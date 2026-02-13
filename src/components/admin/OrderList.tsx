@@ -1,16 +1,16 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useFirebase } from '@/firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 import type { Order, OrderStatus } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import Link from 'next/link';
 
 const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Done', 'Cancelled'];
 
@@ -23,6 +23,7 @@ interface AdminOrderListProps {
 export function AdminOrderList({ orders, isLoading, error }: AdminOrderListProps) {
     const { firestore } = useFirebase();
     const { toast } = useToast();
+    const router = useRouter();
 
     const handleStatusChange = async (order: Order, newStatus: OrderStatus) => {
         if (!firestore || !order.userId) {
@@ -45,16 +46,17 @@ export function AdminOrderList({ orders, isLoading, error }: AdminOrderListProps
 
     if (error) {
         return (
-            <Card className="text-center bg-destructive/10 border-destructive">
+            <Card className="text-center">
                 <CardHeader>
-                    <CardTitle>Permission Denied</CardTitle>
-                    <CardDescription className="text-destructive/80">
-                        A permission error occurred while fetching orders. Please ensure you are logged in as the administrator.
+                    <CardTitle>Error Loading Orders</CardTitle>
+                    <CardDescription>
+                        A permission error occurred. If you just logged in as an admin, your new permissions might still be syncing.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button asChild>
-                        <Link href="/admin/login">Go to Admin Login</Link>
+                    <Button onClick={() => router.refresh()}>
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Refresh Data
                     </Button>
                 </CardContent>
             </Card>
