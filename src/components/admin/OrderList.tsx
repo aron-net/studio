@@ -1,31 +1,28 @@
 'use client';
 
-import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { collectionGroup, query, updateDoc, doc } from 'firebase/firestore';
+import { useFirebase } from '@/firebase';
+import { updateDoc, doc } from 'firebase/firestore';
 import type { Order, OrderStatus } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import type { User } from 'firebase/auth';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 
 const ORDER_STATUSES: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Done', 'Cancelled'];
 
-export function AdminOrderList({ user }: { user: User | null }) {
+interface AdminOrderListProps {
+    orders: Order[] | null;
+    isLoading: boolean;
+    error: Error | null;
+}
+
+export function AdminOrderList({ orders, isLoading, error }: AdminOrderListProps) {
     const { firestore } = useFirebase();
     const { toast } = useToast();
-
-    const allOrdersQuery = useMemoFirebase(() => {
-        if (!firestore) return null;
-        // This query now requires admin privileges defined in firestore.rules
-        return query(collectionGroup(firestore, 'orders'));
-    }, [firestore]);
-
-    const { data: orders, isLoading, error } = useCollection<Order>(allOrdersQuery);
 
     const handleStatusChange = async (order: Order, newStatus: OrderStatus) => {
         if (!firestore || !order.userId) {
@@ -42,7 +39,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
         }
     };
     
-    if (isLoading) {
+    if (isLoading || (orders === null && !error)) {
         return <div className="flex items-center justify-center space-x-2"><Loader2 className="h-6 w-6 animate-spin" /><span>Loading all orders...</span></div>;
     }
 
@@ -52,7 +49,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                 <CardHeader>
                     <CardTitle>Permission Denied</CardTitle>
                     <CardDescription className="text-destructive/80">
-                        You do not have permission to view this page. Please log in as the administrator.
+                        A permission error occurred while fetching orders. Please ensure you are logged in as the administrator.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

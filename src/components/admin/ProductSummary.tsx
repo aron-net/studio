@@ -1,12 +1,9 @@
 'use client';
 
-import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { collectionGroup, query } from 'firebase/firestore';
 import type { Order } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { User } from 'firebase/auth';
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Button } from '../ui/button';
@@ -19,16 +16,13 @@ type ProductSummaryData = {
     totalRevenue: number;
 }
 
-export function ProductSummary({ user }: { user: User | null }) {
-    const { firestore } = useFirebase();
+interface ProductSummaryProps {
+    orders: Order[] | null;
+    isLoading: boolean;
+    error: Error | null;
+}
 
-    const allOrdersQuery = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return query(collectionGroup(firestore, 'orders'));
-    }, [firestore]);
-
-    const { data: orders, isLoading, error } = useCollection<Order>(allOrdersQuery);
-
+export function ProductSummary({ orders, isLoading, error }: ProductSummaryProps) {
     const productSummary = useMemo(() => {
         if (!orders) return [];
 
@@ -53,7 +47,7 @@ export function ProductSummary({ user }: { user: User | null }) {
         return Object.values(summary).sort((a, b) => b.quantitySold - a.quantitySold);
     }, [orders]);
 
-    if (isLoading) {
+    if (isLoading || (orders === null && !error)) {
         return <div className="flex items-center justify-center space-x-2"><Loader2 className="h-6 w-6 animate-spin" /><span>Loading product summary...</span></div>;
     }
 
@@ -63,7 +57,7 @@ export function ProductSummary({ user }: { user: User | null }) {
                 <CardHeader>
                     <CardTitle>Permission Denied</CardTitle>
                     <CardDescription className="text-destructive/80">
-                        You do not have permission to view product analytics. Please log in as the administrator.
+                        A permission error occurred while fetching analytics. Please ensure you are logged in as the administrator.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
