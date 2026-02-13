@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,19 +18,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
   const auth = useAuth();
-  const { user, isUserLoading } = useUser();
   const { toast } = useToast();
-
-  useEffect(() => {
-    // If user is already logged in as admin, redirect them
-    if (!isUserLoading && user && user.email === 'abraham@clinicpesa.com') {
-      router.replace('/admin/orders');
-    }
-  }, [user, isUserLoading, router]);
-
-  if (isUserLoading || (user && user.email === 'abraham@clinicpesa.com')) {
-    return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
-  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,17 +33,17 @@ export default function AdminLoginPage() {
       });
       router.push('/admin/orders');
     } catch (e: any) {
+        let errorMessage = 'An unexpected error occurred. Please try again.';
         if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') {
-            setError('Invalid email or password. Please try again.');
-        } else {
-            setError('An unexpected error occurred. Please try again.');
-            console.error(e);
+            errorMessage = 'Invalid email or password. Please try again.';
         }
+        setError(errorMessage);
         toast({
             title: 'Login Failed',
-            description: 'Invalid email or password. Please try again.',
+            description: errorMessage,
             variant: 'destructive',
         });
+        console.error(e);
     } finally {
       setIsLoading(false);
     }
