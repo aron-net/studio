@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductSummary } from '@/components/admin/ProductSummary';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -17,15 +17,16 @@ export default function AdminOrdersPage() {
   const { user, isUserLoading } = useUser();
   const { firestore } = useFirebase();
   const router = useRouter();
+  const [retryAttempt, setRetryAttempt] = useState(0);
 
-  // This query will only be created when the user is confirmed to be the admin.
+  // This query now depends on `retryAttempt` to force re-evaluation after a delay.
   const allOrdersQuery = useMemoFirebase(() => {
     if (!firestore || !user || user.email !== 'abraham@clinicpesa.com') {
       return null;
     }
     // This collection group query requires admin privileges defined in firestore.rules
     return query(collectionGroup(firestore, 'orders'));
-  }, [firestore, user]);
+  }, [firestore, user, retryAttempt]); // Dependency on retryAttempt will trigger a new query
 
   const { data: orders, isLoading: areOrdersLoading, error: ordersError } = useCollection<Order>(allOrdersQuery);
 
@@ -34,6 +35,17 @@ export default function AdminOrdersPage() {
       router.replace('/admin/login');
     }
   }, [user, isUserLoading, router]);
+
+  // Effect to automatically retry the query ONCE on a permission error.
+  useEffect(() => {
+    if (ordersError && ordersError.message.includes('permission') && retryAttempt < 1) {
+      const timer = setTimeout(() => {
+        setRetryAttempt(1);
+      }, 750); // Wait a moment for auth state to propagate before retrying.
+      return () => clearTimeout(timer);
+    }
+  }, [ordersError, retryAttempt]);
+
 
   if (isUserLoading || !user || user.isAnonymous) {
     return (
@@ -61,6 +73,9 @@ export default function AdminOrdersPage() {
     );
   }
 
+  // While the automatic retry is pending, we keep showing the loading state.
+  const isRetrying = !!(ordersError && retryAttempt < 1);
+
   // At this point, we are the admin. The query is active.
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,15 +93,15 @@ export default function AdminOrdersPage() {
             <TabsContent value="orders">
                 <AdminOrderList
                     orders={orders}
-                    isLoading={areOrdersLoading}
-                    error={ordersError}
+                    isLoading={areOrdersLoading || isRetrying}
+                    error={isRetrying ? null : ordersError} // Suppress error flash during retry
                 />
             </TabsContent>
             <TabsContent value="summary">
                 <ProductSummary
                     orders={orders}
-                    isLoading={areOrdersLoading}
-                    error={ordersError}
+                    isLoading={areOrdersLoading || isRetrying}
+                    error={isRetrying ? null : ordersError} // Suppress error flash during retry
                 />
             </TabsContent>
         </Tabs>
