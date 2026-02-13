@@ -16,19 +16,24 @@ export default function AdminOrdersPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // This effect handles redirection for a definitively logged-out user.
     if (!isUserLoading && !user) {
       router.replace('/admin/login');
     }
   }, [user, isUserLoading, router]);
 
-  if (isUserLoading || !user) {
+  // While Firebase is determining the user state, show a loader.
+  // Also, if the user is anonymous, we're likely in a transition state after login.
+  // Keep showing the loader to wait for the permanent user object to load.
+  if (isUserLoading || !user || user.isAnonymous) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-
+  
+  // At this point, we have a permanent, logged-in user. We can safely check their email.
   if (user.email !== 'abraham@clinicpesa.com') {
     return (
         <div className="container mx-auto px-4 py-8">
@@ -47,6 +52,7 @@ export default function AdminOrdersPage() {
     );
   }
 
+  // If all checks pass, show the admin dashboard.
   return (
     <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
