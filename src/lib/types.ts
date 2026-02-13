@@ -25,6 +25,7 @@ export type Order = {
   userId: string;
   orderDate: string;
   totalAmount: number;
+  quantity: number;
   fulfillmentMethod: FulfillmentMethod;
   deliveryAddress?: string;
   landmark?: string;

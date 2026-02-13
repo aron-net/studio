@@ -69,6 +69,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                         <TableHead>Order ID</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>Customer Phone</TableHead>
+                        <TableHead>Qty</TableHead>
                         <TableHead>Total</TableHead>
                         <TableHead className="w-[200px]">Status</TableHead>
                     </TableRow>
@@ -95,6 +96,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                             <TableCell className="font-mono text-xs">{order.id.slice(-6)}</TableCell>
                             <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                             <TableCell>{order.phoneNumber}</TableCell>
+                            <TableCell>{order.quantity}</TableCell>
                             <TableCell>UGX {order.totalAmount.toLocaleString()}</TableCell>
                             <TableCell>
                                 <Select value={order.status} onValueChange={(value) => handleStatusChange(order, value as OrderStatus)}>
@@ -111,7 +113,7 @@ export function AdminOrderList({ user }: { user: User | null }) {
                         </TableRow>
                     )) : (
                         <TableRow>
-                            <TableCell colSpan={6} className="text-center h-24">No orders found.</TableCell>
+                            <TableCell colSpan={7} className="text-center h-24">No orders found.</TableCell>
                         </TableRow>
                     )}
                 </TableBody>

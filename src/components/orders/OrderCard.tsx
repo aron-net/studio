@@ -1,9 +1,6 @@
 'use client';
-import type { Order, OrderItem } from '@/lib/types';
-import { useCollection, useFirebase, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import type { Order } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Skeleton } from '../ui/skeleton';
 import Image from 'next/image';
 
 type OrderCardProps = {
@@ -12,17 +9,7 @@ type OrderCardProps = {
 }
 
 export function OrderCard({ order, userId }: OrderCardProps) {
-    const { firestore } = useFirebase();
-
-    const orderItemsQuery = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return collection(firestore, `users/${userId}/orders/${order.id}/orderItems`);
-    }, [firestore, userId, order.id]);
-
-    const { data: orderItems, isLoading } = useCollection<OrderItem>(orderItemsQuery);
-    
-    // For this app, we assume one item per order
-    const item = orderItems?.[0];
+    const unitPrice = order.quantity > 0 ? order.totalAmount / order.quantity : 0;
 
     return (
         <Card key={order.id} className="overflow-hidden">
@@ -34,26 +21,24 @@ export function OrderCard({ order, userId }: OrderCardProps) {
                     Placed on {new Date(order.orderDate).toLocaleDateString()}
                     </CardDescription>
                 </div>
-                {isLoading ? <Skeleton className="h-16 w-48" /> : item && (
-                    <div className="flex items-center gap-4 text-right">
-                        <div>
-                            <p className="font-semibold text-foreground">{item.productName}</p>
-                            <p className="text-muted-foreground">
-                                {item.quantity} x UGX{' '}
-                                {item.unitPrice.toLocaleString()}
-                            </p>
-                        </div>
-                        {item.imageUrl && (
-                            <Image 
-                                src={item.imageUrl}
-                                alt={item.productName}
-                                width={64}
-                                height={64}
-                                className="rounded-md object-cover w-16 h-16"
-                            />
-                        )}
+                <div className="flex items-center gap-4 text-right">
+                    <div>
+                        <p className="font-semibold text-foreground">{order.productName}</p>
+                        <p className="text-muted-foreground">
+                            {order.quantity} x UGX{' '}
+                            {unitPrice.toLocaleString()}
+                        </p>
                     </div>
-                )}
+                    {order.productImageUrl && (
+                        <Image 
+                            src={order.productImageUrl}
+                            alt={order.productName || ''}
+                            width={64}
+                            height={64}
+                            className="rounded-md object-cover w-16 h-16"
+                        />
+                    )}
+                </div>
             </div>
           </CardHeader>
           <CardContent className="p-6 grid gap-4 md:grid-cols-2">
@@ -83,7 +68,7 @@ export function OrderCard({ order, userId }: OrderCardProps) {
               </p>
             </div>
             <div className="md:text-right self-end">
-                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="text-sm text-muted-foreground">Status: {order.status}</p>
               <p className="text-2xl font-bold font-headline text-accent">
                 UGX {order.totalAmount.toLocaleString()}
               </p>

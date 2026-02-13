@@ -2,13 +2,13 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import type { Order, OrderItem } from '@/lib/types';
+import type { Order } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { CheckCircle2, Package } from 'lucide-react';
-import { useUser, useDoc, useCollection, useFirebase, useMemoFirebase } from '@/firebase';
-import { doc, collection } from 'firebase/firestore';
+import { useUser, useDoc, useFirebase, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 import Image from 'next/image';
 
 export default function SuccessPage() {
@@ -25,21 +25,13 @@ export default function SuccessPage() {
   }, [user, orderId, firestore]);
   const { data: order, isLoading: isOrderLoading } = useDoc<Order>(orderRef);
   
-  const orderItemsRef = useMemoFirebase(() => {
-    if (!user || !orderId || !firestore) return null;
-    return collection(firestore, 'users', user.uid, 'orders', orderId, 'orderItems');
-  }, [user, orderId, firestore]);
-  const { data: orderItems, isLoading: areItemsLoading } = useCollection<OrderItem>(orderItemsRef);
-
   useEffect(() => {
     if (!isUserLoading && !orderId) {
       router.replace('/');
     }
   }, [orderId, router, isUserLoading]);
   
-  const orderItem = orderItems?.[0];
-
-  if (isUserLoading || isOrderLoading || areItemsLoading || !order || !orderItem) {
+  if (isUserLoading || isOrderLoading || !order) {
     return (
         <div className="flex items-center justify-center h-full">
             <div className="flex items-center space-x-2 text-muted-foreground">
@@ -61,20 +53,20 @@ export default function SuccessPage() {
         <CardContent className="space-y-6 text-left">
             <div className="bg-muted/50 rounded-lg p-4 space-y-2">
                 <div className="flex items-start gap-4">
-                    {orderItem.imageUrl && (
+                    {order.productImageUrl && (
                         <Image 
-                            src={orderItem.imageUrl}
-                            alt={orderItem.productName}
+                            src={order.productImageUrl}
+                            alt={order.productName || ''}
                             width={80}
                             height={80}
                             className="rounded-lg object-cover w-20 h-20"
                         />
                     )}
                     <div className="flex-grow">
-                        <h3 className="font-semibold text-lg">{orderItem.productName}</h3>
+                        <h3 className="font-semibold text-lg">{order.productName}</h3>
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Quantity</span>
-                            <span>{orderItem.quantity}</span>
+                            <span>{order.quantity}</span>
                         </div>
                         <div className="flex justify-between font-bold text-lg">
                             <span className="text-muted-foreground">Total</span>

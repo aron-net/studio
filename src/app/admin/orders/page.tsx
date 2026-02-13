@@ -4,6 +4,8 @@ import { useUser } from '@/firebase';
 import { AdminOrderList } from '@/components/admin/OrderList';
 import { Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProductSummary } from '@/components/admin/ProductSummary';
 
 export default function AdminOrdersPage() {
   const { user, isUserLoading } = useUser();
@@ -17,6 +19,7 @@ export default function AdminOrdersPage() {
   }
 
   if (!user) {
+    // This case is handled by the redirect in AdminLoginPage, but good to have a fallback.
     return (
         <div className="container mx-auto px-4 py-8">
             <Card className="text-center">
@@ -32,12 +35,23 @@ export default function AdminOrdersPage() {
   return (
     <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-            <h1 className="text-3xl font-bold font-headline">Admin - All Orders</h1>
+            <h1 className="text-3xl font-bold font-headline">Admin Dashboard</h1>
             <p className="text-muted-foreground mt-1">
-                Manage and process all customer orders.
+                Manage orders and view product sales analytics.
             </p>
-      </div>
-      <AdminOrderList user={user} />
+        </div>
+        <Tabs defaultValue="orders" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 max-w-md mb-6">
+                <TabsTrigger value="orders">All Orders</TabsTrigger>
+                <TabsTrigger value="summary">Product Summary</TabsTrigger>
+            </TabsList>
+            <TabsContent value="orders">
+                <AdminOrderList user={user} />
+            </TabsContent>
+            <TabsContent value="summary">
+                <ProductSummary user={user} />
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }

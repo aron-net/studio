@@ -55,6 +55,7 @@ export function StepPlaceOrder() {
       userId: user.uid,
       orderDate: new Date().toISOString(),
       totalAmount: totalPrice,
+      quantity: quantity,
       fulfillmentMethod: fulfillmentMethod,
       phoneNumber: phone,
       status: "Placed",
