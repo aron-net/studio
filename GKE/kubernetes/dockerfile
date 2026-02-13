@@ -18,5 +18,5 @@ COPY --from=builder /app/package-lock.json ./package-lock.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/next.config.ts ./next.config.ts
 
-EXPOSE 8080
+#EXPOSE 8080
 CMD ["npm", "start", "--", "-p", "8080"]
