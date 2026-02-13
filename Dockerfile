@@ -18,5 +18,5 @@ COPY --from=builder /app/next.config.ts* ./
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/tsconfig.json* ./
 
-EXPOSE 3000
-CMD ["npm", "start"]
+EXPOSE 8080
+CMD ["npm", "start", "--", "-p", "8080"]
